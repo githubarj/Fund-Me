@@ -7,13 +7,16 @@
 
 pragma solidity ^0.8.8;
 
+//importing from github and npm
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+
 contract FundMe {
 
     uint256 public minimumUSD = 50;      //setting the minumum value in usd
 
     function fund() public payable {
 
-        /* function for people to send money, we use the keyword "payable" for such
+        /* function for people to send ethereum of any other token, we use the keyword "payable" for such
             We want to be able to set a minimum fund amount in USD
            for this there are some things to consider:
            1. How do we send ETH to this contract 
@@ -23,21 +26,33 @@ contract FundMe {
            To require the VALUE attribute to be more than a ceratain amount of 
            ETH we use "require" kwyword
            */
-
         require(msg.value >= minimumUSD, "Didn't send enough"); 
-
         /* the above function has a part for reverting, that is, if the require is not met, 
             revert with the message "Didn't send enough". 
             what is reverting? this is undoing any action before and send remaining gas back
 
         */
-        
-
-
-
-
-
     }
+
+    // We then create a function to get the price of eth, to do this we will use chainlink data feeds, which is essentially reading from another contract
+    function getPrice() public{
+        //Since this is an instance of us interacting with a contract outside of our project we need
+        //ABI - this is basically the list of functions and interactions you can have within a contract
+        //example of chainlink interface- github.com/smartcontractkit/chainlink - contracts - src - vo.8 - interfaces
+        //we can paste the interface and we will get the ABI of the contract
+        //Address- this can be gotten from the contract adresses in chainlink docs
+        //under the network you want  and token relatinship eg ETH/USD
+        //Address - 0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
+    }
+
+    function getVersion() public view returns(uint256){
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+        return priceFeed.version();
+    }
+
+    function getConversionRate() public {}
+
+
 
     //function for the owner of the contract to withdraw funds
     function withdraw() public {}
