@@ -1,0 +1,60 @@
+{
+	"compiler": {
+		"version": "0.8.8+commit.dddeac2f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "fund",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/FundME.sol": "FundMe"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/FundME.sol": {
+			"keccak256": "0x758179700de6863efd0fbac46746bcfedd9919109d373ce22276451e6d5fa34f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a90f2b52e69cd96a93513c039052faefcef509d88c82591c8e293b37c956906d",
+				"dweb:/ipfs/QmTMxKdA1db6oZoz2LxHEKQqoqgTh9W4ktUEihcX3vCRBD"
+			]
+		}
+	},
+	"version": 1
+}
