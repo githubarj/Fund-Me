@@ -6,6 +6,25 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "addressToAmountFunded",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "fund",
 				"outputs": [],
@@ -13,17 +32,54 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "funders",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "ethAmount",
+						"type": "uint256"
+					}
+				],
 				"name": "getConversionRate",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
 				"inputs": [],
 				"name": "getPrice",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -96,11 +152,11 @@
 			]
 		},
 		"contracts/FundME.sol": {
-			"keccak256": "0x5068d1d32c809f361c8239dd92c357c352eefe70a66b7496b3f5167e34913703",
+			"keccak256": "0xa1729bdfcc7fecc3c40a19bd9ee8c9b5bf151f681a822353304026c136a4ccdd",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://39888befa2e7762791362e2e529aa08a278d19e88ebbeaf74a1de6deeb0192fb",
-				"dweb:/ipfs/QmQ86Na7UyaeYWo27uWoF87t2S8gdshgYsUuipk8BkYudp"
+				"bzz-raw://c59326c2b56c64080cc29e7920aaccebc8b253a00187c1f45f1494f2c5a27876",
+				"dweb:/ipfs/QmRAsXRixBLA3JfK9QbxoptCDcRenviegzjb6KQoJkixjp"
 			]
 		}
 	},
