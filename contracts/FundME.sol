@@ -7,16 +7,27 @@
 
 pragma solidity ^0.8.8;
 
-//importing from github and npm
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "./PriceConverter.sol";
+
+
 
 contract FundMe {
+
+    using PriceConverter for uint256;
 
     uint256 public minimumUSD = 50 * 1e18;      //setting the minumum value in gwei
 
     address [] public funders; //A list of all those who successfully send funds to the contract 
 
     mapping(address => uint256) public addressToAmountFunded; //To map the amount sent by each individual
+
+    address public owner;
+
+    //A constructor is a function that is called immediately you deploy a contract
+    constructor(){
+        owner = msg.sender;
+
+    }
 
     function fund() public payable {
 
@@ -30,7 +41,7 @@ contract FundMe {
            To require the VALUE attribute to be more than a ceratain amount of 
            ETH we use "require" kwyword
            */
-        require(getConversionRate(msg.value) >= minimumUSD, "Didn't send enough"); 
+        require(msg.value.getConversionRate() >= minimumUSD, "Didn't send enough"); 
         /* the above function has a part for reverting, that is, if the require is not met, 
             revert with the message "Didn't send enough". 
             what is reverting? this is undoing any action before and send remaining gas back
@@ -40,39 +51,44 @@ contract FundMe {
         addressToAmountFunded[msg.sender] = msg.value; // does the mapping
     }
 
-    // We then create a function to get the price of eth, to do this we will use chainlink data feeds, which is essentially reading from another contract
-    function getPrice() public view returns(uint256){
-        //Since this is an instance of us interacting with a contract outside of our project we need
-        //ABI - this is basically the list of functions and interactions you can have within a contract
-        //example of chainlink interface- github.com/smartcontractkit/chainlink - contracts - src - vo.8 - interfaces
-        //we can paste the interface and we will get the ABI of the contract
-        //Address- this can be gotten from the contract adresses in chainlink docs
-        //under the network you want  and token relatinship eg ETH/USD
-        //Address - 0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
-        (,int price,,,) = priceFeed.latestRoundData(); //This returns multiple values thats why we do the bracket before 
-        //Will return price of ETH in terms of USD
-        //the number will not come with decimals
-        //msg.value has 18 decimals and the ETH to USD price has 8, so we have to make them match up
-        return uint256(price * 1e10); //to match mdg.value which is a uint 256
-
-    }
-
-    function getVersion() public view returns(uint256){
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
-        return priceFeed.version();
-    }
-
-    function getConversionRate(uint256 ethAmount) public view returns(uint256) {
-        uint256 ethPrice = getPrice(); //will call the get price function which will return the price of ETh and put it into the ethPrice variable
-        uint256 ethAmountInUsd = (ethPrice * ethAmount) / 1e18; // Multiplies the ethAmount to its price to get total in USD
-        return ethAmountInUsd;
-    }
-
-
-
+    
     //function for the owner of the contract to withdraw funds
-    function withdraw() public {}
+    function withdraw() public onlyOwner{ //Due to the modifier, it will do whatever is in the modifier first before it executes the function
+
+        //we use a loop to first reset the mapping
+        //for (sarting index, ending index, step amount)
+        for(uint256 funderIndex = 0; funderIndex > funders.length; funderIndex++){
+            address funder = funders[funderIndex]; //creates a variable of type adress called funnder, initializes it to the value in the funders array at index that is equal to value of funderIndex
+            addressToAmountFunded[funder] = 0; // Resets the mapping of funder to funds
+        }
+        //we now reset the funders array
+        funders = new address[](0); // creates a funders as a new array with 0 elements
+        
+        /*
+        withdraw the funds
+        Three ways to do it: Transfer, Send, Call
+        Call is the advisable way to do it
+
+        Transfer (max 2300 gas, thros an error if it fails)
+        payable(msg.sender).trasfer(address(this).balance); //This is to get the balance of the contract 
+
+        Send (maximum 2300 gas, returns bool of whwhether or not sucessful)
+        bool sendSuccess = payable(msg.sender).send(address(this).balance);
+        require (sendSuccess, "Send Failed"); //send does not automatically revert so we add require statement
+        */
+
+        //call (forward all gas or set gas, returns bool)
+        (bool callSucess,) = payable(msg.sender).call{value: address(this).balance}("");
+        require (callSucess, "Call Failed");
+
+    }
+
+    // A modofier enables us to create a keyword that we can add onto a function declaration to modify it
+    modifier onlyOwner {
+        require(msg.sender == owner, "Sender is not Owner!"); //== is cheking for equivalence
+        _; // Means now do the rest of the code in the function
+
+    } 
 
 }
 
