@@ -9,7 +9,7 @@ pragma solidity ^0.8.8;
 
 import "./PriceConverter.sol";
 
-
+error notOWner (); //efficient way of catching erors
 
 contract FundMe {
 
@@ -88,10 +88,26 @@ contract FundMe {
 
     // A modofier enables us to create a keyword that we can add onto a function declaration to modify it
     modifier onlyOwner {
-        require(msg.sender == i_owner, "Sender is not Owner!"); //== is cheking for equivalence
-        _; // Means now do the rest of the code in the function
+
+        /* require(msg.sender == i_owner, "Sender is not Owner!"); //== is cheking for equivalence
+        */
+
+        //More efficient way
+        if (msg.sender != i_owner){
+            revert notOWner();
+        }
+         _; // Means now do the rest of the code in the function
+
 
     } 
+
+    //Refer to FallBackExample
+    receive() external payable {
+        fund();
+    }
+    fallback() external payable {
+        fund();
+    }
 
 }
 
