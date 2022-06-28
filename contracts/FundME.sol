@@ -15,17 +15,20 @@ contract FundMe {
 
     using PriceConverter for uint256;
 
-    uint256 public minimumUSD = 50 * 1e18;      //setting the minumum value in gwei
+    //Two keywords that when assigned to a value, it never changes, that is constant and immutable
+    //also takes less gas, have a different naming convention, all caps with underscores
+    uint256 public constant MINIMUM_USD = 50 * 1e18;      //setting the minumum value in gwei
 
     address [] public funders; //A list of all those who successfully send funds to the contract 
 
     mapping(address => uint256) public addressToAmountFunded; //To map the amount sent by each individual
 
-    address public owner;
+    address public immutable i_owner; //we set immutable for variables which are not initialized in the same line that they are created
+                                    // naing convection, i_name
 
     //A constructor is a function that is called immediately you deploy a contract
     constructor(){
-        owner = msg.sender;
+        i_owner = msg.sender;
 
     }
 
@@ -41,7 +44,7 @@ contract FundMe {
            To require the VALUE attribute to be more than a ceratain amount of 
            ETH we use "require" kwyword
            */
-        require(msg.value.getConversionRate() >= minimumUSD, "Didn't send enough"); 
+        require(msg.value.getConversionRate() >= MINIMUM_USD, "Didn't send enough"); 
         /* the above function has a part for reverting, that is, if the require is not met, 
             revert with the message "Didn't send enough". 
             what is reverting? this is undoing any action before and send remaining gas back
@@ -85,7 +88,7 @@ contract FundMe {
 
     // A modofier enables us to create a keyword that we can add onto a function declaration to modify it
     modifier onlyOwner {
-        require(msg.sender == owner, "Sender is not Owner!"); //== is cheking for equivalence
+        require(msg.sender == i_owner, "Sender is not Owner!"); //== is cheking for equivalence
         _; // Means now do the rest of the code in the function
 
     } 
